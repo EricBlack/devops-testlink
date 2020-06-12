@@ -35,4 +35,13 @@ public class TestlinkUtils {
 
         return api;
     }
+
+    public static boolean check(TestLinkAPI api){
+        try {
+            api.ping();
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

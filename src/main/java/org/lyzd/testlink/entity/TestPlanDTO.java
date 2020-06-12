@@ -14,23 +14,35 @@ import java.util.List;
 public class TestPlanDTO implements Serializable {
     private static final long serialVersionUID = 5057954049311281252L;
 
-    @ApiModelProperty(value="产品id")
+    @ApiModelProperty(value = "产品id")
     @JsonProperty(value = "project_id")
     private Integer projectId;
 
-    @ApiModelProperty(value="产品名称")
+    @ApiModelProperty(value = "产品名称")
     @JsonProperty(value = "project_name")
     private String projectName;
 
-    @ApiModelProperty(value="计划id")
+    @ApiModelProperty(value = "计划id")
     @JsonProperty(value = "plan_id")
     private Integer planId;
 
-    @ApiModelProperty(value="计划名称")
+    @ApiModelProperty(value = "计划名称")
     @JsonProperty(value = "plan_name")
     private String planName;
 
-    @ApiModelProperty(value="测试用例集")
+    @ApiModelProperty(value = "环境")
+    @JsonProperty(value = "plan_env")
+    private String planEnvironment;
+
+    @ApiModelProperty(value = "测试工程版本id")
+    @JsonProperty(value = "version_id")
+    private Integer buildId;
+
+    @ApiModelProperty(value = "测试版本工程名称")
+    @JsonProperty(value = "version_name")
+    private String buildName;
+
+    @ApiModelProperty(value = "测试用例集")
     @JsonProperty(value = "test_cases")
     private List<TestCaseDTO> testCaseDTOS;
 
@@ -64,6 +76,30 @@ public class TestPlanDTO implements Serializable {
 
     public void setPlanName(String planName) {
         this.planName = planName;
+    }
+
+    public String getPlanEnvironment() {
+        return planEnvironment;
+    }
+
+    public void setPlanEnvironment(String planEnvironment) {
+        this.planEnvironment = planEnvironment;
+    }
+
+    public Integer getBuildId() {
+        return buildId;
+    }
+
+    public void setBuildId(Integer buildId) {
+        this.buildId = buildId;
+    }
+
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
     }
 
     public List<TestCaseDTO> getTestCaseDTOS() {

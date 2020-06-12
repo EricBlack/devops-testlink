@@ -12,9 +12,6 @@ public class CaseResultDTO {
     @JsonProperty(value = "case_id")
     private Integer caseId;
 
-    @JsonProperty(value = "plan_id")
-    private Integer planId;
-
     @JsonProperty(value = "execution_status")
     private Integer executionStatus;
 
@@ -27,23 +24,12 @@ public class CaseResultDTO {
     @JsonProperty(value = "notes")
     private String notes;
 
-    @JsonProperty(value = "test_user")
-    private String user;
-
     public Integer getCaseId() {
         return caseId;
     }
 
     public void setCaseId(Integer caseId) {
         this.caseId = caseId;
-    }
-
-    public Integer getPlanId() {
-        return planId;
-    }
-
-    public void setPlanId(Integer planId) {
-        this.planId = planId;
     }
 
     public ExecutionStatus getExecutionStatus() {
@@ -87,26 +73,5 @@ public class CaseResultDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "CaseResult{" +
-                "caseId=" + caseId +
-                ", planId=" + planId +
-                ", executionStatus=" + executionStatus +
-                ", executionDuration=" + executionDuration +
-                ", overWrite=" + overWrite +
-                ", notes='" + notes + '\'' +
-                ", user='" + user + '\'' +
-                '}';
     }
 }
