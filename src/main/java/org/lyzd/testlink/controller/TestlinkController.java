@@ -42,12 +42,14 @@ public class TestlinkController {
                     .data(dto)
                     .build();
         }catch(ResultException e){
+            log.error(e.getMessage(), e);
             ResultCode result = e.getResultCode();
             return ApiResponse.<TestPlanDTO>builder()
                     .code(result.getCode())
                     .message(result.getMessage())
                     .build();
         }catch (TestLinkAPIException e) {
+            log.error(e.getMessage(), e);
             return ApiResponse.<TestPlanDTO>builder()
                     .code(ResultCode.PARAMETER_ERROR.getCode())
                     .message(e.getMessage())
@@ -59,7 +61,6 @@ public class TestlinkController {
     @ApiOperation(value = "更新测试结果")
     public ApiResponse updateResults(@RequestBody UpdateResultDTO updateResultDTO){
         log.info("更新测试用例结果： " + updateResultDTO.toString());
-
         try {
             TestlinkModel model = new TestlinkModel();
             model.updateResult(updateResultDTO);
@@ -68,7 +69,9 @@ public class TestlinkController {
                     .code(ResultCode.SUCCESS.getCode())
                     .message(ResultCode.SUCCESS.getMessage())
                     .build();
+
         }catch (TestLinkAPIException e){
+            log.error(e.getMessage(), e);
             return ApiResponse.builder()
                     .code(ResultCode.PARAMETER_ERROR.getCode())
                     .message(e.getMessage())
