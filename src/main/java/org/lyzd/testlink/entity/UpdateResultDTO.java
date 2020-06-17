@@ -11,10 +11,10 @@ public class UpdateResultDTO {
     @JsonProperty("plan_id")
     private Integer planId;
 
-    @JsonProperty(value = "build_id")
+    @JsonProperty(value = "version_id")
     private Integer buildId;
 
-    @JsonProperty(value = "build_name")
+    @JsonProperty(value = "version_name")
     private String buildName;
 
     @JsonProperty("case_results")

@@ -12,7 +12,6 @@ import org.lyzd.testlink.exception.ResultException;
 import org.lyzd.testlink.model.TestlinkModel;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @author shuchao
@@ -31,7 +30,7 @@ public class TestlinkController {
             @ApiImplicitParam(name = "planName", value = "测试计划名称", dataType = DataType.STRING, paramType = ParamType.QUERY),
             @ApiImplicitParam(name="projectName", value = "项目产品名称", dataType = DataType.STRING, paramType = ParamType.QUERY)})
     public ApiResponse<TestPlanDTO> getPlan(String planName, String projectName){
-        log.info("查询测试计划[项目产品=" + planName + " 测试计划名称=" + projectName);
+        log.info("查询测试计划[项目产品=" + planName + " 测试计划名称=" + projectName + "]");
         try{
             TestlinkModel model = new TestlinkModel();
             TestPlanDTO dto = model.queryPlan(planName, projectName);

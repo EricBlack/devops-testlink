@@ -2,3 +2,19 @@ server:
   port: 8080
   servlet:
     context-path: /testlink
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd} === [%thread] === %-5level === %logger{50} ==== %msg%n"
+  file:
+    name: testlink.log
+    max-history: 7
+    max-size: 10MB
+
+testlink:
+  # 本地测试环境
+  #api-url: http://47.104.150.198:7560/testlink/lib/api/xmlrpc/v1/xmlrpc.php
+  #api-key: 8582301c3137912f7b4889877b76ac38
+  # 内网环境
+  api-url: http://103.160.25.35:32009/lib/api/xmlrpc/v1/xmlrpc.php
+  api-key: 07bdbd7b255bfb7363daa5374329d510

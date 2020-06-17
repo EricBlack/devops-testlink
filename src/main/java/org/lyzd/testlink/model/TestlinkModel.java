@@ -2,9 +2,12 @@ package org.lyzd.testlink.model;
 
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPI;
 import br.eti.kinoshita.testlinkjavaapi.model.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.lyzd.testlink.common.TestlinkUtils;
 import org.lyzd.testlink.entity.*;
 import org.lyzd.testlink.exception.ResultException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,10 +19,10 @@ import java.util.Map;
  * @create 2020 06 09 16:18
  * @description
  */
+
+@Slf4j
 public class TestlinkModel {
     private TestLinkAPI api;
-    private TestProject project;
-    private TestPlan plan;
 
     public TestlinkModel(){
         api = TestlinkUtils.connect();
@@ -49,7 +52,7 @@ public class TestlinkModel {
 
         //获取version信息
         CustomField environment = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "EnvironmentList", null);
-        if(environment == null){
+        if("".equals(environment.getValue())){
             throw new ResultException(ResultCode.ENVIRONMENT_ERROR);
         }
 
@@ -96,19 +99,14 @@ public class TestlinkModel {
                         caseResultDTO.getExecutionDuration(), false, null, null,
                         null, null, caseResultDTO.getOverWrite(), tester,
                         null);
-                System.out.println(response);
+                log.info(response.getExecutionId() + response.getMessage());
                 updateResults.put(caseResultDTO.getCaseId(), true);
             }catch(Exception e){
                 updateResults.put(caseResultDTO.getCaseId(), false);
-                System.out.println(e.getMessage());
+                log.error(e.getMessage());
             }
         }
 
         return updateResults;
-    }
-
-    public static void main(String[] args){
-        TestlinkModel model = new TestlinkModel();
-        TestPlanDTO dto = model.queryPlan("plan-test1", "bank-devops-demo");
     }
 }

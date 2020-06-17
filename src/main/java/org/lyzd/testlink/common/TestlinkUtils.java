@@ -1,6 +1,11 @@
 package org.lyzd.testlink.common;
 
 import br.eti.kinoshita.testlinkjavaapi.TestLinkAPI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,8 +15,20 @@ import java.net.URL;
  * @create 2020 06 09 13:34
  * @description
  */
+
+@Component
 public class TestlinkUtils {
-    public static TestLinkConfig config = new TestLinkConfig();
+
+    private static TestLinkConfig config;
+
+    public static TestLinkConfig getConfig() {
+        return config;
+    }
+
+    @Autowired(required = true)
+    public void setConfig(TestLinkConfig config) {
+        TestlinkUtils.config = config;
+    }
 
     public static String getTestLinkURL() {
         return config.getApiUrl();
