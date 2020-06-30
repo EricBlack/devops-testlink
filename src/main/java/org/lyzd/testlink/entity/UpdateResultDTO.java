@@ -2,9 +2,10 @@ package org.lyzd.testlink.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UpdateResultDTO {
+public class UpdateResultDTO implements Serializable {
     @JsonProperty("test_user")
     private String testUser;
 
@@ -58,5 +59,17 @@ public class UpdateResultDTO {
 
     public void setCaseResults(List<CaseResultDTO> caseResults) {
         this.caseResults = caseResults;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("PlanId=" + getPlanId());
+        sb.append(",TestUser=" + getTestUser());
+        sb.append(",VersionId=" + getBuildId());
+        sb.append(",VersionName=" + getBuildId());
+        sb.append(",CaseResults=" + getCaseResults().toString());
+
+        return sb.toString();
     }
 }

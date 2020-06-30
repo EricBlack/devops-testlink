@@ -3,12 +3,14 @@ package org.lyzd.testlink.entity;
 import br.eti.kinoshita.testlinkjavaapi.constants.ExecutionStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * @author shuchao
  * @create 2020 06 09 14:19
  * @description
  */
-public class CaseResultDTO {
+public class CaseResultDTO implements Serializable {
     @JsonProperty(value = "case_id")
     private Integer caseId;
 
@@ -73,5 +75,17 @@ public class CaseResultDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("CaseId:" + getCaseId());
+        sb.append(",ExecutionDuration=" + getExecutionDuration());
+        sb.append(",ExecutionStatus=" + getExecutionStatus().name());
+        sb.append(",OverWrite=" + getOverWrite());
+        sb.append(",Notes=" +getNotes());
+
+        return sb.toString();
     }
 }

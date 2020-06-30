@@ -12,6 +12,8 @@ import org.lyzd.testlink.exception.ResultException;
 import org.lyzd.testlink.model.TestlinkModel;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 /**
  * @author shuchao
@@ -62,7 +64,7 @@ public class TestlinkController {
         log.info("更新测试用例结果： " + updateResultDTO.toString());
         try {
             TestlinkModel model = new TestlinkModel();
-            model.updateResult(updateResultDTO);
+            Map<Integer, Boolean> results = model.updateResult(updateResultDTO);
 
             return ApiResponse.builder()
                     .code(ResultCode.SUCCESS.getCode())
