@@ -68,9 +68,9 @@ public class TestlinkModel {
 
         //设置测试环境
         planDTO.setPlanEnvironment(environment.getValue());
-
         //设置platform info
         planDTO.setPlatformEnvironment(platforminfo.getValue());
+
         //设置版本信息
         planDTO.setBuildId(build.getId());
         planDTO.setBuildName(build.getName());

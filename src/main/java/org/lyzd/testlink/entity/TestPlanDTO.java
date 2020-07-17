@@ -34,8 +34,8 @@ public class TestPlanDTO implements Serializable {
     @JsonProperty(value = "plan_env")
     private String planEnvironment;
 
-    @ApiModelProperty(value = "移动环境")
-    @JsonProperty(value = "platform_env")
+    @ApiModelProperty(value = "执行系统")
+    @JsonProperty(value = "plan_system")
     private String platformEnvironment;
 
     @ApiModelProperty(value = "测试工程版本id")
