@@ -52,7 +52,8 @@ public class TestlinkModel {
 
         //获取version信息
         CustomField environment = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "EnvironmentList", null);
-        if("".equals(environment.getValue())){
+        CustomField platforminfo = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "PlatformList", null);
+        if("".equals(environment.getValue()) || "".equals(platforminfo.getValue())){
             throw new ResultException(ResultCode.ENVIRONMENT_ERROR);
         }
 
@@ -68,6 +69,8 @@ public class TestlinkModel {
         //设置测试环境
         planDTO.setPlanEnvironment(environment.getValue());
 
+        //设置platform info
+        planDTO.setPlatformEnvironment(platforminfo.getValue());
         //设置版本信息
         planDTO.setBuildId(build.getId());
         planDTO.setBuildName(build.getName());

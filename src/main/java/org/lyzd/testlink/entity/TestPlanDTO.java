@@ -34,6 +34,10 @@ public class TestPlanDTO implements Serializable {
     @JsonProperty(value = "plan_env")
     private String planEnvironment;
 
+    @ApiModelProperty(value = "移动环境")
+    @JsonProperty(value = "platform_env")
+    private String platformEnvironment;
+
     @ApiModelProperty(value = "测试工程版本id")
     @JsonProperty(value = "version_id")
     private Integer buildId;
@@ -84,6 +88,14 @@ public class TestPlanDTO implements Serializable {
 
     public void setPlanEnvironment(String planEnvironment) {
         this.planEnvironment = planEnvironment;
+    }
+
+    public String getPlatformEnvironment(){
+        return platformEnvironment;
+    }
+
+    public void setPlatformEnvironment(String platformEnvironment) {
+        this.platformEnvironment = platformEnvironment;
     }
 
     public Integer getBuildId() {

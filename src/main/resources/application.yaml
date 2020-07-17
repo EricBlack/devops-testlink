@@ -18,3 +18,6 @@ testlink:
   # 内网环境
   api-url: http://103.160.25.35:32009/lib/api/xmlrpc/v1/xmlrpc.php
   api-key: 07bdbd7b255bfb7363daa5374329d510
+  #公网环境
+  #api-url: http://47.104.150.198:7560/testlink/lib/api/xmlrpc/v1/xmlrpc.php
+  #api-key: c0473e666f1fc5d29d86896067d5d4cc
