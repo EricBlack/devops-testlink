@@ -39,7 +39,12 @@ public enum ResultCode {
     /**
      * 参数错误
      */
-    PARAMETER_ERROR(7000, "参数错误");
+    PARAMETER_ERROR(7000, "参数错误"),
+
+    /**
+     * 其他错误
+     */
+    OTHER_ERROR(8000, "其他错误");
 
     private Integer code;
     private String message;

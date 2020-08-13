@@ -21,36 +21,36 @@ import java.util.*;
 public class TestlinkModel {
     private TestLinkAPI api;
 
-    public TestlinkModel(){
+    public TestlinkModel() {
         api = TestlinkUtils.connect();
     }
 
     public TestPlanDTO queryPlan(String planName, String projectName) {
         TestProject testProject = api.getTestProjectByName(projectName);
-        if(testProject == null){
+        if (testProject == null) {
             throw new ResultException(ResultCode.PROJECT_ERROR);
         }
 
         TestPlan testPlan = api.getTestPlanByName(planName, projectName);
-        if(testPlan == null){
+        if (testPlan == null) {
             throw new ResultException(ResultCode.PLAN_ERROR);
         }
 
         TestCase[] cases = api.getTestCasesForTestPlan(testPlan.getId(), null, null, null, null,
                 null, null, null, null, null, null);
-        if(cases == null){
+        if (cases == null) {
             throw new ResultException(ResultCode.CASE_ERROR);
         }
 
         Build build = api.getLatestBuildForTestPlan(testPlan.getId());
-        if(build == null){
+        if (build == null) {
             throw new ResultException(ResultCode.BUILD_ERROR);
         }
 
         //获取version信息
         CustomField environment = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "EnvironmentList", null);
         CustomField platforminfo = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "PlatformList", null);
-        if("".equals(environment.getValue())){
+        if ("".equals(environment.getValue())) {
             throw new ResultException(ResultCode.ENVIRONMENT_ERROR);
         }
 
@@ -74,7 +74,7 @@ public class TestlinkModel {
 
         //设置cases info
         List<TestCaseDTO> caseDTOS = new ArrayList<TestCaseDTO>();
-        for(TestCase testCase : cases){
+        for (TestCase testCase : cases) {
             TestCaseDTO dto = new TestCaseDTO();
             dto.setCaseId(testCase.getId());
             dto.setCaseName(testCase.getName());
@@ -85,33 +85,45 @@ public class TestlinkModel {
         return planDTO;
     }
 
-    public List<UpdateCaseDTO> updateResult(UpdateResultDTO updateResultDTO){
+    public List<UpdateCaseDTO> updateResult(UpdateResultDTO updateResultDTO) throws InterruptedException {
         List<CaseResultDTO> caseResultDTOS = updateResultDTO.getCaseResults();
         Integer planId = updateResultDTO.getPlanId();
         Integer buildId = updateResultDTO.getBuildId();
         String buildName = updateResultDTO.getBuildName();
         String tester = updateResultDTO.getTestUser();
         List<UpdateCaseDTO> updateResults = new ArrayList<UpdateCaseDTO>();
-        for(CaseResultDTO caseResultDTO : caseResultDTOS){
+        for (CaseResultDTO caseResultDTO : caseResultDTOS) {
             UpdateCaseDTO caseResult = new UpdateCaseDTO(caseResultDTO.getCaseId());
-            try{
-                ReportTCResultResponse response = api.reportTCResult(caseResultDTO.getCaseId(), null, planId, caseResultDTO.getExecutionStatus(),
-                        null, buildId, buildName, caseResultDTO.getNotes(),
-                        caseResultDTO.getExecutionDuration(), false, null, null,
-                        null, null, caseResultDTO.getOverWrite(), tester,
-                        null);
-                log.info(response.getExecutionId() + response.getMessage());
-                //更新结果
-                caseResult.setUpdateResult(true);
-                caseResult.setUpdateTime(new Date());
-                caseResult.setUpdateMessage(response.getMessage());
-                updateResults.add(caseResult);
-            }catch(Exception e){
-                caseResult.setUpdateResult(false);
-                caseResult.setUpdateTime(new Date());
-                caseResult.setUpdateMessage(e.getMessage());
-                updateResults.add(caseResult);
-                log.error(e.getMessage());
+            //添加更新失败重试机制，尝试更新3次
+            int retryCount = 0;
+            while (true) {
+                try {
+                    ReportTCResultResponse response = api.reportTCResult(caseResultDTO.getCaseId(), null, planId, caseResultDTO.getExecutionStatus(),
+                            null, buildId, buildName, caseResultDTO.getNotes(),
+                            caseResultDTO.getExecutionDuration(), false, null, null,
+                            null, null, caseResultDTO.getOverWrite(), tester,
+                            null);
+                    log.info(String.format("更新测试用例[caseId=%s]结果：%s执行Id:%d.", caseResultDTO.getCaseId(), response.getMessage(), response.getExecutionId()));
+                    //更新结果
+                    caseResult.setUpdateResult(true);
+                    caseResult.setUpdateTime(new Date());
+                    caseResult.setUpdateMessage(response.getMessage());
+                    updateResults.add(caseResult);
+                    break;
+                } catch (Exception e) {
+                    retryCount++;
+                    log.error(String.format("第[%d]次更新测试用例[caseId=%s]失败，失败原因：%s", retryCount, caseResultDTO.getCaseId(), e.getMessage()));
+                    if (retryCount < 3) {
+                        Thread.sleep(3000);
+                        continue;
+                    }
+                    //重试3次后返回信息
+                    caseResult.setUpdateResult(false);
+                    caseResult.setUpdateTime(new Date());
+                    caseResult.setUpdateMessage(e.getMessage());
+                    updateResults.add(caseResult);
+                    break;
+                }
             }
         }
 
