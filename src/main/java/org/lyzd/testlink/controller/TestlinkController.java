@@ -12,7 +12,9 @@ import org.lyzd.testlink.exception.ResultException;
 import org.lyzd.testlink.model.TestlinkModel;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import static org.lyzd.testlink.common.ApiResponse.*;
 
 
 /**
@@ -62,20 +64,22 @@ public class TestlinkController {
     @ApiOperation(value = "更新测试结果")
     public ApiResponse updateResults(@RequestBody UpdateResultDTO updateResultDTO){
         log.info("更新测试用例结果： " + updateResultDTO.toString());
+        List<UpdateCaseDTO> results = new ArrayList<UpdateCaseDTO>();
         try {
             TestlinkModel model = new TestlinkModel();
-            Map<Integer, Boolean> results = model.updateResult(updateResultDTO);
+            results = model.updateResult(updateResultDTO);
 
-            return ApiResponse.builder()
+            return builder()
                     .code(ResultCode.SUCCESS.getCode())
                     .message(ResultCode.SUCCESS.getMessage())
+                    .data(results)
                     .build();
-
-        }catch (TestLinkAPIException e){
+         }catch (TestLinkAPIException e){
             log.error(e.getMessage(), e);
-            return ApiResponse.builder()
+            return builder()
                     .code(ResultCode.PARAMETER_ERROR.getCode())
                     .message(e.getMessage())
+                    .data(results)
                     .build();
         }
     }

@@ -9,10 +9,7 @@ import org.lyzd.testlink.entity.*;
 import org.lyzd.testlink.exception.ResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author shuchao
@@ -53,7 +50,7 @@ public class TestlinkModel {
         //获取version信息
         CustomField environment = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "EnvironmentList", null);
         CustomField platforminfo = api.getTestPlanCustomFieldDesignValue(testPlan.getId(), testProject.getId(), "PlatformList", null);
-        if("".equals(environment.getValue()) || "".equals(platforminfo.getValue())){
+        if("".equals(environment.getValue())){
             throw new ResultException(ResultCode.ENVIRONMENT_ERROR);
         }
 
@@ -88,14 +85,15 @@ public class TestlinkModel {
         return planDTO;
     }
 
-    public Map<Integer, Boolean> updateResult(UpdateResultDTO updateResultDTO){
+    public List<UpdateCaseDTO> updateResult(UpdateResultDTO updateResultDTO){
         List<CaseResultDTO> caseResultDTOS = updateResultDTO.getCaseResults();
         Integer planId = updateResultDTO.getPlanId();
         Integer buildId = updateResultDTO.getBuildId();
         String buildName = updateResultDTO.getBuildName();
         String tester = updateResultDTO.getTestUser();
-        Map<Integer, Boolean> updateResults = new HashMap();
+        List<UpdateCaseDTO> updateResults = new ArrayList<UpdateCaseDTO>();
         for(CaseResultDTO caseResultDTO : caseResultDTOS){
+            UpdateCaseDTO caseResult = new UpdateCaseDTO(caseResultDTO.getCaseId());
             try{
                 ReportTCResultResponse response = api.reportTCResult(caseResultDTO.getCaseId(), null, planId, caseResultDTO.getExecutionStatus(),
                         null, buildId, buildName, caseResultDTO.getNotes(),
@@ -103,9 +101,16 @@ public class TestlinkModel {
                         null, null, caseResultDTO.getOverWrite(), tester,
                         null);
                 log.info(response.getExecutionId() + response.getMessage());
-                updateResults.put(caseResultDTO.getCaseId(), true);
+                //更新结果
+                caseResult.setUpdateResult(true);
+                caseResult.setUpdateTime(new Date());
+                caseResult.setUpdateMessage(response.getMessage());
+                updateResults.add(caseResult);
             }catch(Exception e){
-                updateResults.put(caseResultDTO.getCaseId(), false);
+                caseResult.setUpdateResult(false);
+                caseResult.setUpdateTime(new Date());
+                caseResult.setUpdateMessage(e.getMessage());
+                updateResults.add(caseResult);
                 log.error(e.getMessage());
             }
         }

@@ -13,8 +13,8 @@ logging:
 
 testlink:
   # 本地测试环境
-  #api-url: http://47.104.150.198:7560/testlink/lib/api/xmlrpc/v1/xmlrpc.php
-  #api-key: 8582301c3137912f7b4889877b76ac38
+  #api-url: http://192.168.228.109:8200/lib/api/xmlrpc/v1/xmlrpc.php
+  #api-key: 55808ad62e6c72ae0823e6ff7e5a240a
   # 内网环境
   api-url: http://103.160.25.35:32009/lib/api/xmlrpc/v1/xmlrpc.php
   api-key: 07bdbd7b255bfb7363daa5374329d510
